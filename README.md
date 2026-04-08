@@ -69,7 +69,7 @@ Add a **Script v2** sensor for each scope. Select `purestorage-sensor.exe` as th
 
 **Parameters:**
 ```
---endpoint %host --apitoken %scriptplaceholder1 --scope capacity --insecure --warning 80 --critical 90
+--endpoint %host --apitoken %scriptplaceholder1 --scope capacity --warning 80 --critical 90
 ```
 
 **Recommended interval:** 5 minutes
@@ -80,7 +80,7 @@ Monitors total capacity, used space, used percentage (with warning/error thresho
 
 **Parameters:**
 ```
---endpoint %host --apitoken %scriptplaceholder1 --scope performance --insecure
+--endpoint %host --apitoken %scriptplaceholder1 --scope performance
 ```
 
 **Recommended interval:** 1 minute
@@ -91,7 +91,7 @@ Monitors read/write IOPS, read/write bandwidth, read/write latency (microseconds
 
 **Parameters:**
 ```
---endpoint %host --apitoken %scriptplaceholder1 --scope hardware --insecure
+--endpoint %host --apitoken %scriptplaceholder1 --scope hardware
 ```
 
 **Recommended interval:** 5 minutes
@@ -102,7 +102,7 @@ Reports critical component counts by type (controllers, shelves, drives, PSUs, f
 
 **Parameters:**
 ```
---endpoint %host --apitoken %scriptplaceholder1 --scope volumes --insecure --volumes vol1,vol2,vol3
+--endpoint %host --apitoken %scriptplaceholder1 --scope volumes --volumes vol1,vol2,vol3
 ```
 
 **Recommended interval:** 5 minutes
@@ -116,7 +116,8 @@ Monitors used space, provisioned space, and data reduction per volume. Maximum 1
 | `--endpoint` | Yes | | FlashArray IP or FQDN |
 | `--apitoken` | Yes | | API Token for authentication |
 | `--scope` | Yes | | `capacity`, `performance`, `hardware`, or `volumes` |
-| `--insecure` | No | `false` | Skip TLS certificate verification |
+| `--insecure` | No | `true` | Skip TLS certificate verification (default) |
+| `--secure` | No | | Enable TLS certificate verification |
 | `--warning` | No | `80` | Capacity warning threshold (%) |
 | `--critical` | No | `90` | Capacity error threshold (%) |
 | `--volumes` | No | | Comma-separated volume names (required for `volumes` scope) |
@@ -165,7 +166,7 @@ Errors are always reported via JSON output (`"status": "error"`) with exit code 
 
 ## TLS / Certificates
 
-FlashArrays typically use self-signed certificates. Use `--insecure` to skip verification. Without it, the system CA store is used.
+TLS certificate verification is **disabled by default** because FlashArrays typically use self-signed certificates. Use `--secure` to enable strict TLS verification against the system CA store.
 
 ## License
 

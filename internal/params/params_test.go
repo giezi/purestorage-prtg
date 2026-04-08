@@ -64,8 +64,19 @@ func TestParseDefaults(t *testing.T) {
 	if p.Critical != 90 {
 		t.Errorf("Critical = %v, want 90", p.Critical)
 	}
+	if !p.Insecure {
+		t.Error("Insecure = false, want true (default)")
+	}
+}
+
+func TestParseSecureFlag(t *testing.T) {
+	input := "--endpoint 10.0.0.1 --apitoken tok --scope performance --secure"
+	p, err := Parse(input)
+	if err != nil {
+		t.Fatalf("Parse() error: %v", err)
+	}
 	if p.Insecure {
-		t.Error("Insecure = true, want false")
+		t.Error("Insecure = true, want false after --secure")
 	}
 }
 

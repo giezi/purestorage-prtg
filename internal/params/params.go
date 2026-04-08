@@ -25,6 +25,7 @@ func Parse(input string) (*Params, error) {
 
 	p := &Params{
 		AuthMode: "session",
+		Insecure: true,
 		Warning:  80,
 		Critical: 90,
 	}
@@ -63,6 +64,8 @@ func Parse(input string) (*Params, error) {
 			p.APIVersion = args[i]
 		case "--insecure":
 			p.Insecure = true
+		case "--secure":
+			p.Insecure = false
 		case "--warning":
 			i++
 			if i >= len(args) {

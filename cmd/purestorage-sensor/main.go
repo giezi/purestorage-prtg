@@ -58,6 +58,8 @@ func main() {
 		result = sensor.RunHardware(client)
 	case "volumes":
 		result = sensor.RunVolumes(client, p.Volumes)
+	case "snapshots":
+		result = sensor.RunSnapshots(client, p.SnapAgeDays)
 	default:
 		sensor.Fatal("unknown scope: %s", p.Scope)
 	}
@@ -85,11 +87,13 @@ SCOPES:
   performance   IOPS, bandwidth, latency, queue depth
   hardware      Health summary: controllers, drives, PSUs, fans
   volumes       Per-volume space (requires --volumes)
+  snapshots     Stale snapshot detection (age threshold)
 
 OPTIONAL PARAMETERS:
   --warning <pct>             Capacity warning threshold (default: 80)
   --critical <pct>            Capacity error threshold (default: 90)
   --volumes <v1,v2,...>       Comma-separated volume names (max 10)
+  --snap-age-days <days>      Snapshot age threshold in days (default: 30)
   --secure                    Enable TLS certificate verification (default: insecure)
   --insecure                  Skip TLS certificate verification (default)
   --auth-mode <mode>          Authentication mode (default: session)
@@ -104,6 +108,7 @@ EXAMPLES:
   echo "--endpoint fa.local --apitoken abc123 --scope performance" | purestorage-sensor
   echo "--endpoint 10.0.0.1 --apitoken abc123 --scope hardware" | purestorage-sensor
   echo "--endpoint 10.0.0.1 --apitoken abc123 --scope volumes --volumes vol1,vol2" | purestorage-sensor
+  echo "--endpoint 10.0.0.1 --apitoken abc123 --scope snapshots --snap-age-days 30" | purestorage-sensor
 
 PRTG CONFIGURATION:
   In PRTG, add a Script v2 sensor and set the Parameters field to:

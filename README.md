@@ -10,6 +10,7 @@ A Go-based custom sensor for PRTG Network Monitor that monitors Pure Storage Fla
 | `performance` | IOPS, bandwidth, latency, queue depth | 9 channels |
 | `hardware` | Controller, shelf, drive, PSU, fan health summary | 8 channels |
 | `volumes` | Per-volume used space, provisioned, data reduction | 3 per volume (max 10 volumes) |
+| `snapshots` | Stale snapshot detection by age threshold | 5 channels |
 
 ## Requirements
 
@@ -109,18 +110,30 @@ Reports critical component counts by type (controllers, shelves, drives, PSUs, f
 
 Monitors used space, provisioned space, and data reduction per volume. Maximum 10 volumes per sensor instance. Create multiple sensors for more volumes.
 
+#### Snapshot Age Sensor (optional)
+
+**Parameters:**
+```
+--endpoint %host --apitoken %scriptplaceholder1 --scope snapshots --snap-age-days 30
+```
+
+**Recommended interval:** 6 hours or daily
+
+Detects stale snapshots older than the configured threshold (default: 30 days). Reports total snapshot count, number of old snapshots, oldest snapshot age, and space consumed by old snapshots. Uses server-side filtering for efficiency (works with 50k+ snapshots).
+
 ## Parameters Reference
 
 | Parameter | Required | Default | Description |
 |-----------|----------|---------|-------------|
 | `--endpoint` | Yes | | FlashArray IP or FQDN |
 | `--apitoken` | Yes | | API Token for authentication |
-| `--scope` | Yes | | `capacity`, `performance`, `hardware`, or `volumes` |
+| `--scope` | Yes | | `capacity`, `performance`, `hardware`, `volumes`, or `snapshots` |
 | `--insecure` | No | `true` | Skip TLS certificate verification (default) |
 | `--secure` | No | | Enable TLS certificate verification |
 | `--warning` | No | `80` | Capacity warning threshold (%) |
 | `--critical` | No | `90` | Capacity error threshold (%) |
 | `--volumes` | No | | Comma-separated volume names (required for `volumes` scope) |
+| `--snap-age-days` | No | `30` | Snapshot age threshold in days (for `snapshots` scope) |
 | `--auth-mode` | No | `session` | Authentication mode (`session`) |
 | `--apiversion` | No | auto | Specific API version (e.g., `2.26`) |
 

@@ -94,6 +94,30 @@ type VolumeSpaceItem struct {
 	Time  int64       `json:"time"`
 }
 
+// VolumeSnapshotResponse is returned by GET /api/2.x/volume-snapshots.
+// Supports total_item_count and aggregated totals via query parameters.
+type VolumeSnapshotResponse struct {
+	Items          []VolumeSnapshotItem  `json:"items"`
+	Total          []VolumeSnapshotTotal `json:"total"`
+	TotalItemCount int64                 `json:"total_item_count"`
+	MoreItems      bool                  `json:"more_items_remaining"`
+}
+
+type VolumeSnapshotItem struct {
+	Name    string               `json:"name"`
+	Created int64                `json:"created"`
+	Source  VolumeSnapshotSource `json:"source"`
+	Space   VolumeSpace          `json:"space"`
+}
+
+type VolumeSnapshotTotal struct {
+	Space VolumeSpace `json:"space"`
+}
+
+type VolumeSnapshotSource struct {
+	Name string `json:"name"`
+}
+
 type VolumeSpace struct {
 	DataReduction    float64 `json:"data_reduction"`
 	Shared           int64   `json:"shared"`

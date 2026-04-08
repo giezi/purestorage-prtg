@@ -197,6 +197,27 @@ func (c *Client) GetVolumesSpace(names []string) (*VolumeSpaceResponse, error) {
 	return &resp, nil
 }
 
+// GetVolumeSnapshotCount returns the total number of volume snapshots.
+func (c *Client) GetVolumeSnapshotCount() (int64, error) {
+	var resp VolumeSnapshotResponse
+	if err := c.doGet("/volume-snapshots?total_item_count=true&limit=1", &resp); err != nil {
+		return 0, err
+	}
+	return resp.TotalItemCount, nil
+}
+
+// GetOldVolumeSnapshots returns old snapshots (created before thresholdMs),
+// sorted ascending by created time, with total_item_count and aggregated totals.
+// Only the oldest snapshot (limit=1) is returned in Items for the name/age.
+func (c *Client) GetOldVolumeSnapshots(thresholdMs int64) (*VolumeSnapshotResponse, error) {
+	path := fmt.Sprintf("/volume-snapshots?filter=created%%3C%d&sort=created&limit=1&total_item_count=true&total=true", thresholdMs)
+	var resp VolumeSnapshotResponse
+	if err := c.doGet(path, &resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
 // ArrayName returns the array name from a space response for use in messages.
 func (c *Client) ArrayName() (string, error) {
 	var resp ArraySpaceResponse
